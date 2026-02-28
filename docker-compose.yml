@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # SERVIÇO 1: O Backend (Java Spring Boot)
+  # ==========================================
+  backend:
+    build: ./backend             # Diz ao Docker onde está o Dockerfile do Java
+    container_name: marketlens-backend
+    ports:
+      - "8080:8080"              # Mapeia a porta 8080 do container para o seu PC
+    environment:
+      # Passa a chave da API do arquivo .env para o Spring Boot
+      - SPRING_AI_OPENAI_API_KEY=${GEMINI_API_KEY} 
+
+  # ==========================================
+  # SERVIÇO 2: O Frontend (React + Nginx)
+  # ==========================================
+  frontend:
+    build: ./frontend            # Diz ao Docker onde está o Dockerfile do React
+    container_name: marketlens-frontend
+    ports:
+      - "80:80"                  # Mapeia a porta 80 do Nginx para a porta 80 do seu PC
+    depends_on:
+      - backend                  # Só inicia o frontend depois que o backend começar
