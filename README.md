@@ -10,16 +10,16 @@
 
 ## 🚀 Funcionalidades Principais
 
-1.  **Leitura Automática de Notas:** Upload de fotos de cupons fiscais (OCR + Interpretação via Gemini AI).
-2.  **Dashboard Financeiro:** Gráficos interativos de gastos por categoria (Pizza) e evolução mensal (Barras).
-3.  **Market Intelligence (Busca):** Pesquise por produtos ou categorias e veja um gráfico de linha com a variação de preço (Inflação Pessoal).
-4.  **Gestão Completa:** Edição em tempo real de itens (preço/nome) e exclusão de notas com recálculo automático.
+1. **Leitura Automática de Notas:** Upload de fotos de cupons fiscais (OCR + Interpretação via Gemini AI).
+2. **Dashboard Financeiro:** Gráficos interativos de gastos por categoria (Pizza) e evolução mensal (Barras).
+3. **Market Intelligence (Busca):** Pesquise por produtos ou categorias e veja um gráfico de linha com a variação de preço (Inflação Pessoal).
+4. **Gestão Completa:** Edição em tempo real de itens (preço/nome) e exclusão de notas com recálculo automático.
 
 ## 🛠️ Tecnologias Utilizadas
 
 * **Backend:** Java 17, Spring Boot 3, Spring AI, H2 Database, Maven.
 * **Frontend:** React.js (Vite), Tailwind CSS, Recharts, Nginx.
-* **Inteligência Artificial:** Google Gemini Pro Vision.
+* **Inteligência Artificial:** Google Gemini.
 * **Infraestrutura:** Docker, Docker Compose (Multi-stage builds).
 
 ---
@@ -39,3 +39,30 @@ Node.js na máquina hospedeira.
    ```bash
    git clone https://github.com/Germano-leite/marketlens.git
    cd marketlens
+   ```
+
+2. **Configure a Chave da IA:**
+   Na pasta raiz do projeto, crie um arquivo chamado `.env` e adicione sua chave do Gemini:
+   ```env
+   GEMINI_API_KEY=sua_chave_aqui_sem_aspas
+   ```
+
+3. **Suba os Containers:**
+   Ainda na raiz do projeto, execute o comando para construir e iniciar os servidores:
+   ```bash
+   docker compose up --build
+   ```
+
+4. **Acesse a Aplicação:**
+   Abra o seu navegador e acesse: 👉 **http://localhost**
+
+---
+
+### 🐳 Comandos Úteis (Docker)
+
+* **Para desligar a aplicação:** Pressione `Ctrl + C` no terminal em execução ou rode `docker compose down`.
+* **Para rodar em segundo plano:** `docker compose up -d`
+* **Para ver os logs do backend:** `docker compose logs -f backend`
+
+---
+*Desenvolvido como Projeto Acadêmico de Pós-Graduação da FIAP.*
