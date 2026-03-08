@@ -1,6 +1,6 @@
 # 🛒 MarketLens - Inteligência Financeira com IA
 
-> **MarketLens** é uma plataforma SaaS que transforma notas fiscais de supermercado em inteligência financeira. Utilizando Inteligência Artificial (Gemini), o sistema lê fotos de cupons fiscais, categoriza gastos e monitora a inflação pessoal de produtos ao longo do tempo.
+> **MarketLens** é uma plataforma inovadora que transforma notas fiscais de supermercado em inteligência financeira. Utilizando Inteligência Artificial (Google Gemini), o sistema processa imagens de cupons fiscais, categoriza gastos automaticamente, monitora a inflação pessoal de produtos ao longo do tempo e gera um planejamento de compras inteligente.
 
 ![Status](https://img.shields.io/badge/Status-Concluído-success)
 ![Java](https://img.shields.io/badge/Backend-Java%2017%20%7C%20Spring%20Boot-red)
@@ -10,17 +10,18 @@
 
 ## 🚀 Funcionalidades Principais
 
-1. **Leitura Automática de Notas:** Upload de fotos de cupons fiscais (OCR + Interpretação via Gemini AI).
-2. **Dashboard Financeiro:** Gráficos interativos de gastos por categoria (Pizza) e evolução mensal (Barras).
-3. **Market Intelligence (Busca):** Pesquise por produtos ou categorias e veja um gráfico de linha com a variação de preço (Inflação Pessoal).
-4. **Gestão Completa:** Edição em tempo real de itens (preço/nome) e exclusão de notas com recálculo automático.
+1. **Leitura Automática de Notas Fiscais:** Upload de fotos de cupons fiscais com extração de dados e normalização de nomes de produtos via Gemini AI.
+2. **Planejador Inteligente (Smart Planner):** Geração automática de listas de compras (Mensal de Base vs. Semanal de Frescos) baseada no perfil familiar, cruzando dados de histórico de consumo e aplicando limites de orçamento.
+3. **Dashboard Financeiro:** Visão macro do orçamento com gráficos interativos de gastos por categoria (Drill-down) e evolução temporal.
+4. **Market Intelligence:** Motor de busca inteligente por produtos ou categorias, apresentando gráficos de linha com a variação histórica de preço (Inflação Pessoal).
+5. **Gestão Flexível:** Edição em tempo real de itens extraídos, adição manual no planejador com precificação de fallback e recálculo dinâmico de subtotais.
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **Backend:** Java 17, Spring Boot 3, Spring AI, H2 Database, Maven.
-* **Frontend:** React.js (Vite), Tailwind CSS, Recharts, Nginx.
-* **Inteligência Artificial:** Google Gemini.
-* **Infraestrutura:** Docker, Docker Compose (Multi-stage builds).
+* **Backend:** Java 17, Spring Boot 3, Spring Data JPA, H2 Database (In-Memory), RestClient.
+* **Frontend:** React.js (Vite), Tailwind CSS, Recharts, Lucide Icons.
+* **Inteligência Artificial:** Google Gemini 2.5 Flash API.
+* **Infraestrutura:** Docker, Docker Compose.
 
 ---
 
@@ -46,6 +47,7 @@ Node.js na máquina hospedeira.
    ```env
    GEMINI_API_KEY=sua_chave_aqui_sem_aspas
    ```
+   Você pode configurá-la via variável de ambiente (.env - recomendado) ou no `application.properties`.
 
 3. **Suba os Containers:**
    Ainda na raiz do projeto, execute o comando para construir e iniciar os servidores:
@@ -54,7 +56,7 @@ Node.js na máquina hospedeira.
    ```
 
 4. **Acesse a Aplicação:**
-   Abra o seu navegador e acesse: 👉 **http://localhost**
+   Abra o seu navegador e acesse: 👉 **http://localhost** *(Ou a porta configurada no seu ambiente, ex: http://localhost:5173 para execução local do Vite)*
 
 ---
 
@@ -65,4 +67,5 @@ Node.js na máquina hospedeira.
 * **Para ver os logs do backend:** `docker compose logs -f backend`
 
 ---
+
 *Desenvolvido como Projeto Acadêmico de Pós-Graduação da FIAP.*

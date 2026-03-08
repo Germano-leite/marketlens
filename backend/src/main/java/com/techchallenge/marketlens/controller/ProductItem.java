@@ -30,7 +30,7 @@ public class ProductItem {
     
     private Double totalPrice;  // Ex: 9.18
 
-    // Relacionamento: Vários itens pertencem a UMA nota (ManyToOne)
+    // Relacionamento: Vários itens pertencem a UMA nota fiscal (ManyToOne)
     @ManyToOne
     @JoinColumn(name = "receipt_id") // Cria a coluna de chave estrangeira
     @JsonIgnore // Importante: Evita loop infinito ao transformar em JSON

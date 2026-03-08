@@ -4,8 +4,10 @@ import ReceiptUpload from './components/ReceiptUpload';
 import ReceiptCard from './components/ReceiptCard';
 import Dashboard from './components/Dashboard';
 import PriceHistoryChart from './components/PriceHistoryChart';
-import EditItemModal from './components/EditItemModal'; 
-import { Folder, Tag, Search, X, Loader2, ScanLine } from 'lucide-react'; // Adicione Folder e Tag
+import EditItemModal from './components/EditItemModal';
+import EditHeaderModal from './components/EditHeaderModal';
+import PlannerDashboard from './components/PlannerDashboard'; 
+import { Folder, Tag, Search, X, Loader2, ScanLine, CalendarDays } from 'lucide-react'; 
 
 function App() {
   const [receipts, setReceipts] = useState([]);
@@ -22,6 +24,12 @@ function App() {
   // Estado para controlar o modal de edição de item
   const [editingItem, setEditingItem] = useState(null);
 
+  // Estado para controlar o modal de edição de cabeçalho  
+  const [editingReceiptHeader, setEditingReceiptHeader] = useState(null);
+
+  // Controla se a tela do Planejador está visível ou não
+  const [showPlanner, setShowPlanner] = useState(false);
+
   useEffect(() => {
     fetchReceipts();
   }, []);
@@ -31,7 +39,7 @@ function App() {
       const response = await axios.get('http://localhost:8080/api/receipts');
       setReceipts(response.data.reverse());
     } catch (error) {
-      console.error("Erro ao buscar notas:", error);
+      console.error("Erro ao buscar notas fiscais:", error);
     } finally {
       setLoading(false);
     }
@@ -56,12 +64,12 @@ function App() {
     }
   };
 
-  //
   const selectProduct = async (item) => {
     setSearchTerm(item.name);
     setShowSuggestions(false);
     setIsSearching(true);
     setLoading(true);
+    setShowPlanner(false); 
 
     try {
         let response;
@@ -69,7 +77,7 @@ function App() {
             // Se escolheu categoria, chama o endpoint de histórico agrupado
             response = await axios.get(`http://localhost:8080/api/items/category-history?categoryName=${item.name}`);
         } else {
-            // Se escolheu produto, chama o endpoint exato (antigo)
+            // Se escolheu produto, chama o endpoint exato
             response = await axios.get(`http://localhost:8080/api/items/history?exactName=${item.name}`);
         }
         setSearchResults(response.data);
@@ -91,12 +99,12 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta nota?")) return;
+    if (!window.confirm("Tem certeza que deseja excluir esta nota fiscal?")) return;
     try {
       await axios.delete(`http://localhost:8080/api/receipts/${id}`);
       setReceipts(receipts.filter((r) => r.id !== id));
     } catch (error) {
-      alert("Erro ao excluir nota.");
+      alert("Erro ao excluir nota fiscal.");
     }
   };
 
@@ -110,9 +118,9 @@ function App() {
       const updatedReceipts = receipts.map(receipt => {
         // Encontra a nota fiscal dona desse item
         if (receipt.items.some(i => i.id === savedItem.id)) {
-            // Atualiza a lista de itens dessa nota
+            // Atualiza a lista de itens dessa nota fiscal
             const newItems = receipt.items.map(i => i.id === savedItem.id ? savedItem : i);
-            // Recalcula o total da nota localmente para o card atualizar na hora
+            // Recalcula o total da nota fiscal localmente para o card atualizar na hora
             const newTotal = newItems.reduce((acc, curr) => acc + curr.totalPrice, 0);
             
             return { ...receipt, items: newItems, totalAmount: newTotal };
@@ -128,19 +136,42 @@ function App() {
     }
   };
 
+  const handleEditHeader = async (updatedData) => {
+    // Usa o ID da nota fiscal que está salva no estado!
+    if (!editingReceiptHeader) return; 
+
+    try {
+      await axios.put(`http://localhost:8080/api/receipts/${editingReceiptHeader.id}/header`, updatedData);
+      
+      setReceipts(prevReceipts => 
+        prevReceipts.map(receipt => 
+          receipt.id === editingReceiptHeader.id 
+            ? { ...receipt, supermarketName: updatedData.supermarketName, date: updatedData.date + "T00:00:00" }
+            : receipt
+        )
+      );
+      setEditingReceiptHeader(null); // Fecha o modal após salvar!
+    } catch (error) {
+      console.error("Erro ao atualizar cabeçalho da nota fiscal:", error);
+      alert("Erro ao salvar as alterações no servidor.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 font-sans">
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between gap-4">
           
-          {/* Logo (Esconde em mobile se estiver buscando) */}
-          <div className={`flex items-center gap-2 text-brand-600 ${isSearching ? 'hidden md:flex' : 'flex'}`}>
+          {/* Logo Clicável - Agora ela fecha o planejador e volta pra home */}
+          <button 
+            onClick={() => { setShowPlanner(false); clearSearch(); }}
+            className={`flex items-center gap-2 text-brand-600 hover:opacity-80 transition ${isSearching || showPlanner ? 'hidden md:flex' : 'flex'}`}
+          >
             <ScanLine className="w-8 h-8" />
             <h1 className="text-xl font-bold tracking-tight text-gray-900">
               Market<span className="text-brand-600">Lens</span>
             </h1>
-          </div>
+          </button>
 
           {/* BARRA DE BUSCA */}
           <div className="flex-1 max-w-md relative group">
@@ -151,7 +182,7 @@ function App() {
                   placeholder="Busque por 'Carne', 'Leite'..." 
                   className="w-full pl-10 pr-10 py-2 bg-gray-100 border-transparent focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-100 rounded-lg text-sm transition-all outline-none"
                   value={searchTerm}
-                  onChange={handleInputChange} // <--- Mudou aqui
+                  onChange={handleInputChange}
                   onFocus={() => { if(suggestions.length > 0) setShowSuggestions(true) }}
                 />
                 
@@ -177,10 +208,9 @@ function App() {
                         {suggestions.map((item, index) => (
                             <li key={index}>
                                 <button
-                                    onClick={() => selectProduct(item)} // Passa o objeto inteiro (nome + tipo)
+                                    onClick={() => selectProduct(item)}
                                     className="w-full text-left px-4 py-3 hover:bg-brand-50 hover:text-brand-700 text-sm text-gray-700 flex items-center gap-3 group transition-colors border-b border-gray-50 last:border-0"
                                 >
-                                    {/* Ícone muda conforme o tipo */}
                                     {item.type === 'CATEGORIA' ? (
                                         <div className="bg-purple-100 p-1.5 rounded-md text-purple-600">
                                             <Folder className="w-4 h-4" />
@@ -190,7 +220,6 @@ function App() {
                                             <Tag className="w-4 h-4" />
                                         </div>
                                     )}
-                                    
                                     <div className="flex-1">
                                         <span className="font-medium block">{item.name}</span>
                                         <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">
@@ -205,6 +234,15 @@ function App() {
             )}
           </div>
 
+          {/* NOVO BOTÃO DO PLANEJADOR */}
+          <button 
+            onClick={() => { setShowPlanner(true); clearSearch(); }}
+            className="flex items-center gap-2 px-4 py-2 bg-brand-50 text-brand-700 rounded-lg font-semibold hover:bg-brand-100 transition shadow-sm border border-brand-200"
+          >
+            <CalendarDays className="w-5 h-5" />
+            <span className="hidden sm:inline">Planejar Mês</span>
+          </button>
+
           {/* Modal para edicao do item */}
           <EditItemModal 
             key={editingItem ? editingItem.id : 'empty'} 
@@ -214,81 +252,102 @@ function App() {
             onSave={handleUpdateItem} 
           />
 
+          {/* Modal para edição do cabeçalho da nota fiscal */}
+          {editingReceiptHeader && (
+            <EditHeaderModal 
+              receipt={editingReceiptHeader} 
+              onClose={() => setEditingReceiptHeader(null)} 
+              onSave={handleEditHeader} 
+            />
+          )}
+
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+
+      <main className="w-full max-w-[1600px] mx-auto px-4 py-8">  
+        {/* LÓGICA DE EXIBIÇÃO DAS TELAS */}
         
-        {loading ? (
+        {/* TELA 1: PLANEJADOR */}
+        {showPlanner ? (
+          <div className="animate-in fade-in slide-in-from-bottom-2">
+            <PlannerDashboard />
+          </div>
+        ) 
+        
+        /* TELA 2: LOADING GERAL */
+        : loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-gray-400">
             <Loader2 className="w-10 h-10 animate-spin mb-4 text-brand-500" />
             <p>Carregando...</p>
           </div>
-        ) : (
-          <>
-            {/* MODO BUSCA: Mostra o Gráfico de Evolução */}
-            {isSearching ? (
-              <div className="animate-in fade-in slide-in-from-bottom-2">
-                <button onClick={clearSearch} className="mb-4 text-sm text-gray-500 hover:text-brand-600 flex items-center gap-1">
-                  ← Voltar para o Dashboard
-                </button>
+        ) 
+        
+        /* TELA 3: RESULTADOS DE BUSCA */
+        : isSearching ? (
+          <div className="animate-in fade-in slide-in-from-bottom-2">
+            <button onClick={clearSearch} className="mb-4 text-sm text-gray-500 hover:text-brand-600 flex items-center gap-1">
+              ← Voltar para o Dashboard
+            </button>
 
-                {searchResults.length > 0 ? (
-                  <>
-                    <PriceHistoryChart data={searchResults} productName={searchTerm} />
-                    
-                    <h3 className="text-lg font-bold text-gray-700 mb-4">Ocorrências Encontradas</h3>
-                    <div className="grid gap-4">
-                        {searchResults.map((item) => (
-                            <div key={item.id} className="bg-white p-4 rounded-lg border border-gray-100 flex justify-between items-center shadow-sm">
-                                <div>
-                                    <p className="font-bold text-gray-800">{item.productName}</p>
-                                    <p className="text-xs text-gray-500">{new Date(item.date).toLocaleDateString('pt-BR')} • {item.supermarket}</p>
-                                </div>
-                                <div className="text-brand-600 font-bold">
-                                    R$ {item.price.toFixed(2)}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center py-20 text-gray-400">
-                    <Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                    <p>Nenhum produto encontrado com o nome "{searchTerm}".</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              /* MODO NORMAL: Dashboard + Lista de Upload */
+            {searchResults.length > 0 ? (
               <>
-                {receipts.length > 0 && <Dashboard receipts={receipts} />}
-
-                <div className="grid md:grid-cols-[350px_1fr] gap-8 mt-8">
-                  <div className="space-y-6">
-                    <div className="sticky top-24">
-                      <ReceiptUpload onUploadSuccess={addReceipt} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-bold text-gray-800">Histórico de Compras</h2>
-                      <span className="text-xs font-semibold text-gray-500 bg-white px-3 py-1 rounded-full border shadow-sm">
-                        {receipts.length} notas
-                      </span>
-                    </div>
-                    {receipts.map((receipt) => (
-                      <ReceiptCard 
-                        key={receipt.id} 
-                        receipt={receipt} 
-                        onDelete={handleDelete} 
-                        onEditItem={setEditingItem}/>
+                <PriceHistoryChart data={searchResults} productName={searchTerm} />
+                
+                <h3 className="text-lg font-bold text-gray-700 mb-4">Ocorrências Encontradas</h3>
+                <div className="grid gap-4">
+                    {searchResults.map((item) => (
+                        <div key={item.id} className="bg-white p-4 rounded-lg border border-gray-100 flex justify-between items-center shadow-sm">
+                            <div>
+                                <p className="font-bold text-gray-800">{item.productName}</p>
+                                <p className="text-xs text-gray-500">{new Date(item.date).toLocaleDateString('pt-BR')} • {item.supermarket}</p>
+                            </div>
+                            <div className="text-brand-600 font-bold">
+                                R$ {item.price.toFixed(2)}
+                            </div>
+                        </div>
                     ))}
-                  </div>
                 </div>
               </>
+            ) : (
+              <div className="text-center py-20 text-gray-400">
+                <Search className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                <p>Nenhum produto encontrado com o nome "{searchTerm}".</p>
+              </div>
             )}
+          </div>
+        ) 
+        
+        /* TELA 4: DASHBOARD PADRÃO (Com notas fiscais) */
+        : (
+          <>
+            {receipts.length > 0 && <Dashboard receipts={receipts} />}
+
+            <div className="grid md:grid-cols-[350px_1fr] gap-8 mt-8">
+              <div className="space-y-6">
+                <div className="sticky top-24">
+                  <ReceiptUpload onUploadSuccess={addReceipt} />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-gray-800">Histórico de Compras</h2>
+                  <span className="text-xs font-semibold text-gray-500 bg-white px-3 py-1 rounded-full border shadow-sm">
+                    {receipts.length} notas fiscais
+                  </span>
+                </div>
+                {receipts.map((receipt) => (
+                  <ReceiptCard 
+                    key={receipt.id} 
+                    receipt={receipt} 
+                    onDelete={handleDelete} 
+                    onEditItem={setEditingItem}
+                    onEditHeader={setEditingReceiptHeader}/>
+                ))}
+              
+              </div>
+            </div>
           </>
         )}
       </main>

@@ -38,7 +38,7 @@ public class ProductItemController {
 
             ProductItem savedItem = itemRepository.save(item);
 
-            // Recalcula o total da Nota Pai
+            // Recalcula o total da nota fiscal Pai
             Receipt receipt = item.getReceipt();
             double newTotal = receipt.getItems().stream()
                     .mapToDouble(ProductItem::getTotalPrice)

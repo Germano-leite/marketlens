@@ -8,6 +8,8 @@ import com.techchallenge.marketlens.service.AIService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/receipts")
@@ -17,6 +19,7 @@ public class ReceiptController {
     private final AIService aiService;
     private final ReceiptRepository repository;
     private final ObjectMapper objectMapper;
+    
 
     public ReceiptController(AIService aiService, ReceiptRepository repository) {
         this.aiService = aiService;
@@ -38,8 +41,8 @@ public class ReceiptController {
             // 2. Converte o JSON da IA para a Entidade Receipt
             Receipt receipt = objectMapper.readValue(jsonResult, Receipt.class);
 
-            // 3. Vincula os itens à nota (Consistência do Banco de Dados)
-            // O JSON cria a Nota e os Itens, mas não diz aos itens "quem é o pai deles".
+            // 3. Vincula os itens à nota fiscal (Consistência do Banco de Dados)
+            // O JSON cria a nota fiscal e os Itens, mas não diz aos itens "quem é o pai deles".
             if (receipt.getItems() != null) {
                 receipt.getItems().forEach(item -> item.setReceipt(receipt));
             }
@@ -69,5 +72,19 @@ public class ReceiptController {
         
         repository.deleteById(id);
         return ResponseEntity.noContent().build(); // Retorna 204 (Sucesso sem conteúdo)
+    }
+
+    @PutMapping("/{id}/header")
+    public ResponseEntity<?> updateReceiptHeader(@PathVariable Long id, @RequestBody Map<String, String> updates) {
+        return repository.findById(id).map(receipt -> {
+            if (updates.containsKey("supermarketName")) {
+                receipt.setSupermarketName(updates.get("supermarketName"));
+            }
+            if (updates.containsKey("date")) {
+                receipt.setDate(java.time.LocalDate.parse(updates.get("date")).atStartOfDay());
+            }
+            repository.save(receipt);
+            return ResponseEntity.ok().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

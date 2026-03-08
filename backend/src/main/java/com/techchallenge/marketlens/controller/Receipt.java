@@ -25,9 +25,9 @@ public class Receipt {
     
     private Double totalAmount; // Valor total da notinha
 
-    // Relacionamento: Uma nota tem VÁRIOS itens (OneToMany)
-    // cascade = CascadeType.ALL: Se eu salvar a nota, salva os itens automaticamente.
-    // orphanRemoval = true: Se eu deletar a nota, deleta os itens.
+    // Relacionamento: Uma nota fiscal tem VÁRIOS itens (OneToMany)
+    // cascade = CascadeType.ALL: Se eu salvar a nota fiscal, salva os itens automaticamente.
+    // orphanRemoval = true: Se eu deletar a nota fiscal, deleta os itens.
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductItem> items = new ArrayList<>();
 }

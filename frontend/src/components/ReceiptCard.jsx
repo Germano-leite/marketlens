@@ -1,19 +1,24 @@
-import { ShoppingBag, Calendar, DollarSign, Trash2 } from 'lucide-react';
+import { ShoppingBag, Calendar, Trash2, Pencil } from 'lucide-react';
 
-const ReceiptCard = ({ receipt, onDelete, onEditItem }) => {
+const ReceiptCard = ({ receipt, onDelete, onEditItem, onEditHeader }) => {
   const formattedDate = new Date(receipt.date).toLocaleDateString('pt-BR', {
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 transition-all hover:shadow-xl group">
-      
       <div className="bg-brand-600 p-4 text-white">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-bold text-lg flex items-center gap-2">
+            {/* AQUI: Repassamos a nota fiscal inteira para o App.jsx quando clica */}
+            <h3 
+              className="font-bold text-lg flex items-center gap-2 cursor-pointer group/title hover:text-brand-100 transition-colors"
+              onClick={() => onEditHeader(receipt)}
+              title="Editar nome e data"
+            >
               <ShoppingBag className="w-5 h-5" />
               {receipt.supermarketName}
+              <Pencil className="w-4 h-4 opacity-0 group-hover/title:opacity-100 transition-opacity" />
             </h3>
             <p className="text-brand-100 text-sm flex items-center gap-1 mt-1">
               <Calendar className="w-3 h-3" /> {formattedDate}
@@ -21,11 +26,10 @@ const ReceiptCard = ({ receipt, onDelete, onEditItem }) => {
           </div>
           
           <div className="flex flex-col items-end gap-2">
-            
             <button 
               onClick={() => onDelete(receipt.id)}
               className="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors opacity-100 md:opacity-0 group-hover:opacity-100"
-              title="Excluir nota"
+              title="Excluir nota fiscal"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -55,19 +59,15 @@ const ReceiptCard = ({ receipt, onDelete, onEditItem }) => {
             {receipt.items.map((item) => (
               <tr 
                 key={item.id} 
-                // Permite clicar em qualquer parte da linha para editar o item
                 onClick={() => onEditItem(item)}
                 className="hover:bg-blue-50 transition-colors cursor-pointer group"
                 title="Clique para editar"
               >
                 <td className="px-4 py-3 relative">
-                  {/* Indicador visual de edição */}
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
                   <p className="font-medium text-gray-800 group-hover:text-brand-700 transition-colors">
                     {item.productName}
                   </p>
-                
                   <div className="flex gap-2 mt-1">
                     <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase">
                       {item.category}
@@ -79,7 +79,6 @@ const ReceiptCard = ({ receipt, onDelete, onEditItem }) => {
                     )}
                   </div>
                 </td>
-
                 <td className="px-4 py-3 text-center text-gray-500">
                   {item.quantity} <span className="text-xs">{item.unit}</span>
                 </td>

@@ -80,7 +80,7 @@ const ReceiptUpload = ({ onUploadSuccess }) => {
           ) : (
             <>
               <CheckCircle className="w-5 h-5" />
-              Processar Nota
+              Processar nota fiscal
             </>
           )}
         </button>

@@ -14,8 +14,7 @@ public class AIService {
 
     @Value("${gemini.api.key}")
     private String apiKey;
-
-    //private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+    
     @Value("${gemini.api.url}")
     private String apiUrl;
 
@@ -37,8 +36,21 @@ public class AIService {
             1. 'category': Escolha uma das Macro-Categorias: [ACOGUE, PADARIA, LATICINIOS, HORTIFRUTI, LIMPEZA, BEBIDAS, MERCEARIA, HIGIENE, OUTROS].
             2. 'subCategory': Seja ESPECÍFICO sobre o produto. 
                - NÃO use termos genéricos como 'Roupas', 'Grãos' ou 'Bovinos'.
-               - USE o nome do produto: 'Sabão em Pó', 'Água Sanitária', 'Arroz', 'Feijão', 'Picanha', 'Filé de Frango'.
+               - USE o nome do produto: 'Sabão em Pó', 'Água Sanitária', 'Arroz', 'Feijão', 'Carne Bovina', 'Frango'.
             
+            "REGRA CRÍTICA DE AGRUPAMENTO E PADRONIZAÇÃO: " +
+            "Você DEVE generalizar o nome dos produtos para a sua forma mais básica e essencial. " +
+            "Remova absolutamente todas as marcas, pesos, tamanhos e variações de tipo. " +
+            "Siga estes exemplos de conversão obrigatoriamente: " +
+            "- 'Leite Integral Parmalat 1L' ou 'Leite Desnatado' -> Retorne apenas 'Leite' " +
+            "- 'Arroz Tio João 5kg' ou 'Arroz Parboilizado' -> Retorne apenas 'Arroz' " +
+            "- 'Macarrão Espaguete Renata' ou 'Macarrão Pena' -> Retorne apenas 'Macarrão' " +
+            "- 'Sabão em Pó Omo 2kg' -> Retorne apenas 'Sabão em Pó' " +
+            "- 'Refrigerante Coca-Cola 2L' -> Retorne apenas 'Refrigerante' " +
+            "- 'Pão de Forma Wickbold' -> Retorne apenas 'Pão' " +
+            "O objetivo é que produtos semelhantes tenham EXATAMENTE o mesmo nome (productName) para facilitar o agrupamento no banco de dados.";
+
+
             Retorne APENAS este JSON:
             {
                 "supermarketName": "Nome",
