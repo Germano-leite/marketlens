@@ -22,41 +22,80 @@
 //             // Limpa o banco para não duplicar com os dados antigos "errados"
 //             receiptRepository.deleteAll(); 
 
-//             System.out.println("🌱 SEEDING: Plantando dados DETALHADOS no banco...");
+//             System.out.println("🌱 SEEDING: Plantando dados PADRONIZADOS no banco...");
 
-//             // --- JANEIRO ---
-//             Receipt r1 = createReceipt("Supermercado Preço Bom", LocalDateTime.now().minusMonths(2));
-//             // Antes: "LATICINIOS", "Leite" -> OK
-//             addItem(r1, "Leite Integral Italac", "LATICINIOS", "Leite", 12.0, "UN", 4.50);
-//             // Antes: "ACOGUE", "Bovinos" -> Agora: "Carne Bovina" ou o corte específico
-//             addItem(r1, "Picanha Bovina", "ACOGUE", "Carne Bovina", 1.5, "KG", 69.90);
-//             // Antes: "LIMPEZA", "Roupas" -> Agora: "Sabão em Pó"
-//             addItem(r1, "Sabão em Pó Omo", "LIMPEZA", "Sabão em Pó", 1.0, "UN", 18.90);
+//             // ==========================================
+//             // --- JANEIRO 2026 ---
+//             // ==========================================
+
+//             // 1. Compra Mensal (Grande) - Início de Janeiro
+//             Receipt r1 = createReceipt("Supermercado Preço Bom", LocalDateTime.of(2026, 1, 5, 10, 30));
+//             addItem(r1, "Arroz", "MERCEARIA", "Arroz", 1.0, "UN", 25.90); 
+//             addItem(r1, "Feijão", "MERCEARIA", "Feijão", 3.0, "UN", 8.50);
+//             addItem(r1, "Macarrão", "MERCEARIA", "Macarrão", 4.0, "UN", 4.20);
+//             addItem(r1, "Leite", "LATICINIOS", "Leite", 12.0, "UN", 4.80);
+//             addItem(r1, "Manteiga", "LATICINIOS", "Manteiga", 1.0, "UN", 12.50);
+//             addItem(r1, "Carne Bovina", "ACOGUE", "Carne Bovina", 2.5, "KG", 42.90);
+//             addItem(r1, "Peito de Frango", "ACOGUE", "Frango", 2.0, "KG", 19.90);
+//             addItem(r1, "Ovos", "MERCEARIA", "Ovos", 2.0, "UN", 17.90);
+//             addItem(r1, "Pão", "PADARIA", "Pão", 2.0, "UN", 8.50);
 //             calculateTotal(r1);
 
-//             // --- FEVEREIRO ---
-//             Receipt r2 = createReceipt("Mercadão da Cidade", LocalDateTime.now().minusMonths(1));
-//             addItem(r2, "Leite Integral Italac", "LATICINIOS", "Leite", 12.0, "UN", 4.89);
-//             // Antes: "MERCEARIA", "Grãos" -> Agora: "Arroz"
-//             addItem(r2, "Arroz Tio João 5kg", "MERCEARIA", "Arroz", 2.0, "UN", 22.50);
-//             // Antes: "BEBIDAS", "Refrigerante" -> OK, mas pode ser "Refrigerante Cola"
-//             addItem(r2, "Coca-Cola 2L", "BEBIDAS", "Refrigerante", 3.0, "UN", 8.99);
-//             addItem(r2, "Água Sanitária Ypê", "LIMPEZA", "Água Sanitária", 2.0, "UN", 4.50); // Novo item
+//             // 2. Compra Semanal (Reposição Menor) - Meados de Janeiro
+//             Receipt r2 = createReceipt("Mercadão da Cidade", LocalDateTime.of(2026, 1, 15, 18, 15));
+//             addItem(r2, "Leite", "LATICINIOS", "Leite", 6.0, "UN", 4.80);
+//             addItem(r2, "Pão", "PADARIA", "Pão", 1.0, "UN", 8.50);
+//             addItem(r2, "Sobrecoxa de Frango", "ACOGUE", "Frango", 1.5, "KG", 14.90);
+//             addItem(r2, "Macarrão", "MERCEARIA", "Macarrão", 2.0, "UN", 4.20);
 //             calculateTotal(r2);
 
-//             // --- MARÇO ---
-//             Receipt r3 = createReceipt("Carrefour Bairro", LocalDateTime.now().minusDays(2));
-//             addItem(r3, "Leite Integral Italac", "LATICINIOS", "Leite", 6.0, "UN", 5.49);
-//             addItem(r3, "Picanha Bovina", "ACOGUE", "Carne Bovina", 2.0, "KG", 75.00);
-//             addItem(r3, "Feijão Carioca Camil", "MERCEARIA", "Feijão", 4.0, "UN", 8.90); // Novo item
+//             // 3. Compra Semanal (Reposição Menor) - Fim de Janeiro
+//             Receipt r3 = createReceipt("Supermercado Preço Bom", LocalDateTime.of(2026, 1, 24, 9, 0));
+//             addItem(r3, "Leite", "LATICINIOS", "Leite", 6.0, "UN", 4.90);
+//             addItem(r3, "Ovos", "MERCEARIA", "Ovos", 1.0, "UN", 18.50);
+//             addItem(r3, "Carne Bovina", "ACOGUE", "Carne Bovina", 1.2, "KG", 44.90);
+//             addItem(r3, "Pão", "PADARIA", "Pão", 2.0, "UN", 8.50);
 //             calculateTotal(r3);
 
-//             receiptRepository.saveAll(Arrays.asList(r1, r2, r3));
-//             System.out.println("🌳 SEEDING: Dados detalhados criados!");
+//             // ==========================================
+//             // --- FEVEREIRO 2026 ---
+//             // ==========================================
+
+//             // 4. Compra Mensal (Grande) - Início de Fevereiro (com leve inflação simulada)
+//             Receipt r4 = createReceipt("Carrefour Bairro", LocalDateTime.of(2026, 2, 6, 11, 0));
+//             addItem(r4, "Arroz", "MERCEARIA", "Arroz", 1.0, "UN", 26.50);
+//             addItem(r4, "Feijão", "MERCEARIA", "Feijão", 4.0, "UN", 8.20);
+//             addItem(r4, "Macarrão", "MERCEARIA", "Macarrão", 5.0, "UN", 4.50);
+//             addItem(r4, "Leite", "LATICINIOS", "Leite", 12.0, "UN", 5.10);
+//             addItem(r4, "Manteiga", "LATICINIOS", "Manteiga", 2.0, "UN", 12.90);
+//             addItem(r4, "Carne Bovina", "ACOGUE", "Carne Bovina", 3.0, "KG", 45.00);
+//             addItem(r4, "Sobrecoxa de Frango", "ACOGUE", "Frango", 2.5, "KG", 15.50);
+//             addItem(r4, "Ovos", "MERCEARIA", "Ovos", 2.0, "UN", 18.00);
+//             addItem(r4, "Pão", "PADARIA", "Pão", 3.0, "UN", 8.90);
+//             calculateTotal(r4);
+
+//             // 5. Compra Semanal (Reposição Menor) - Meados de Fevereiro
+//             Receipt r5 = createReceipt("Mercadão da Cidade", LocalDateTime.of(2026, 2, 16, 17, 30));
+//             addItem(r5, "Leite", "LATICINIOS", "Leite", 6.0, "UN", 5.10);
+//             addItem(r5, "Pão", "PADARIA", "Pão", 1.0, "UN", 8.90);
+//             addItem(r5, "Peito de Frango", "ACOGUE", "Frango", 1.5, "KG", 20.50);
+//             addItem(r5, "Feijão", "MERCEARIA", "Feijão", 1.0, "UN", 8.20);
+//             calculateTotal(r5);
+
+//             // 6. Compra Semanal (Reposição Menor) - Fim de Fevereiro
+//             Receipt r6 = createReceipt("Carrefour Bairro", LocalDateTime.of(2026, 2, 25, 10, 15));
+//             addItem(r6, "Leite", "LATICINIOS", "Leite", 6.0, "UN", 5.10);
+//             addItem(r6, "Ovos", "MERCEARIA", "Ovos", 1.0, "UN", 18.50);
+//             addItem(r6, "Carne Bovina", "ACOGUE", "Carne Bovina", 1.0, "KG", 45.00);
+//             addItem(r6, "Pão", "PADARIA", "Pão", 1.0, "UN", 8.90);
+//             calculateTotal(r6);
+
+//             receiptRepository.saveAll(Arrays.asList(r1, r2, r3, r4, r5, r6));
+//             System.out.println("🌳 SEEDING: 6 Notas Fiscais criadas com sucesso! (Jan/Fev 2026)");
 //         };
 //     }
 
-//     // --- Métodos Auxiliares para não repetir código ---
+//     // --- Métodos Auxiliares ---
 
 //     private Receipt createReceipt(String market, LocalDateTime date) {
 //         Receipt r = new Receipt();

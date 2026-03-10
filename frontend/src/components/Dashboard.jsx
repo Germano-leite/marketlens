@@ -79,31 +79,37 @@ const Dashboard = ({ receipts }) => {
       <div className="grid md:grid-cols-2 gap-6">
         
         {/* Card Resumo */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-5">
-                <Wallet className="w-32 h-32 text-brand-600" />
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden flex flex-col justify-between min-h-[200px]">
+            {/* Ícone Decorativo de Fundo Absoluto (Sem z-index) */}
+            <div className="absolute -right-4 -top-4 opacity-5 pointer-events-none">
+                <Wallet className="w-40 h-40 text-brand-600" />
             </div>
-            <h3 className="text-gray-500 font-medium mb-2 flex items-center gap-2 z-10">
-            <Wallet className="w-5 h-5 text-brand-600" />
-            Gasto Total Acumulado
-            </h3>
-            <p className="text-4xl font-bold text-gray-800 mb-6 z-10">
-            R$ {totalSpending.toFixed(2)}
-            </p>
-            <div className="bg-orange-50 p-4 rounded-lg border border-orange-100 z-10">
-            <h4 className="text-orange-800 font-semibold text-sm flex items-center gap-2 mb-2">
-                <AlertTriangle className="w-4 h-4" />
-                Maior Gasto (Categoria):
-            </h4>
-            <p className="text-gray-700 font-medium">
-                {macroData.length > 0 ? macroData[0].name : '-'} 
-                <span className="text-gray-500 text-sm ml-2">
-                (R$ {macroData.length > 0 ? macroData[0].value.toFixed(2) : '0.00'})
-                </span>
-            </p>
+            
+            {/* Conteúdo Textual limpo (Sem z-index para respeitar o Header) */}
+            <div>
+                <h3 className="text-gray-500 font-medium mb-2 flex items-center gap-2">
+                    <Wallet className="w-5 h-5 text-brand-600" />
+                    Gasto Total Acumulado
+                </h3>
+                <p className="text-4xl font-bold text-gray-800 mb-6">
+                    R$ {totalSpending.toFixed(2)}
+                </p>
+            </div>
+
+            <div className="bg-orange-50 p-4 rounded-lg border border-orange-100 mt-auto">
+                <h4 className="text-orange-800 font-semibold text-sm flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-4 h-4" />
+                    Maior Gasto (Categoria):
+                </h4>
+                <p className="text-gray-700 font-medium">
+                    {macroData.length > 0 ? macroData[0].name : '-'} 
+                    <span className="text-gray-500 text-sm ml-2">
+                    (R$ {macroData.length > 0 ? macroData[0].value.toFixed(2) : '0.00'})
+                    </span>
+                </p>
             </div>
         </div>
-
+        
         {/* Card Pizza Interativa */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col">
             <div className="flex justify-between items-center mb-4">

@@ -124,8 +124,8 @@ public class AIService {
             }
 
             var firstCandidate = candidates.get(0);
-            var content = firstCandidate.path("content"); // Content é Objeto, não Array
-            var parts = content.path("parts"); // Parts é que é o Array
+            var content = firstCandidate.path("content"); 
+            var parts = content.path("parts"); 
             
             if (parts.isEmpty()) {
                  throw new RuntimeException("Conteúdo vazio (sem parts).");
@@ -139,8 +139,6 @@ public class AIService {
                        .trim();
 
         } catch (Exception e) {
-            // Se der erro, o log bruto lá em cima já nos mostrou o porquê,
-            // mas aqui garantimos que o Java não crashe.
             throw new RuntimeException("Erro ao extrair JSON: " + e.getMessage(), e);
         }
     }
