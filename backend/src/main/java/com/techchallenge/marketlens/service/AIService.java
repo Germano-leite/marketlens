@@ -39,7 +39,7 @@ public class AIService {
                - USE o nome do produto: 'Sabão em Pó', 'Água Sanitária', 'Arroz', 'Feijão', 'Carne Bovina', 'Frango'.
             
             "REGRA CRÍTICA DE AGRUPAMENTO E PADRONIZAÇÃO: " +
-            "Você DEVE generalizar o nome dos produtos para a sua forma mais básica e essencial. " +
+            "Você DEVE generalizar a subCategoriy para a sua forma mais básica e essencial. " +
             "Remova absolutamente todas as marcas, pesos, tamanhos e variações de tipo. " +
             "Siga estes exemplos de conversão obrigatoriamente: " +
             "- 'Leite Integral Parmalat 1L' ou 'Leite Desnatado' -> Retorne apenas 'Leite' " +
@@ -48,7 +48,7 @@ public class AIService {
             "- 'Sabão em Pó Omo 2kg' -> Retorne apenas 'Sabão em Pó' " +
             "- 'Refrigerante Coca-Cola 2L' -> Retorne apenas 'Refrigerante' " +
             "- 'Pão de Forma Wickbold' -> Retorne apenas 'Pão' " +
-            "O objetivo é que produtos semelhantes tenham EXATAMENTE o mesmo nome (productName) para facilitar o agrupamento no banco de dados.";
+            "O objetivo é que produtos semelhantes tenham EXATAMENTE a mesma subCategory (subCategory) para facilitar o agrupamento no banco de dados.";
 
 
             Retorne APENAS este JSON:
