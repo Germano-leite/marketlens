@@ -68,4 +68,9 @@ Node.js na máquina hospedeira.
 
 ---
 
+Vídeo do Pitch (Apresentação): [https://youtu.be/g1unHZUFo2A](https://youtu.be/g1unHZUFo2A)
+
+Vídeo do MVP (Demonstração): [https://youtu.be/hph1JT92km0](https://youtu.be/hph1JT92km0)
+
+---
 *Desenvolvido como Projeto Acadêmico de Pós-Graduação da FIAP.*
